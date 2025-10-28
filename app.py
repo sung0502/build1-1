@@ -241,24 +241,19 @@ with left_col:
 
             col1, col2 = st.columns(2)
             with col1:
-                task_category = st.selectbox("Category*", ["Personal Habits", "Responsibilities"])
                 task_priority = st.selectbox("Priority*", ["High", "Medium", "Low"], index=1)
+                deadline_date = st.date_input("Date (optional)", value=None)
 
             with col2:
-                has_deadline = st.checkbox("Add deadline?")
-                if has_deadline:
-                    deadline_date = st.date_input("Date")
-                    has_time = st.checkbox("Specific time?")
-                    if has_time:
-                        deadline_time = st.time_input("Time")
+                deadline_time = st.time_input("Time (optional)", value=None)
 
             submitted = st.form_submit_button("Add Task")
 
             if submitted and task_title:
                 deadline = None
                 time_str = ""
-                if has_deadline:
-                    if has_time:
+                if deadline_date:
+                    if deadline_time:
                         deadline = datetime.combine(deadline_date, deadline_time)
                         time_str = deadline_time.strftime("%H:%M")
                     else:
@@ -266,7 +261,7 @@ with left_col:
 
                 db.add_task(
                     title=task_title,
-                    category=task_category,
+                    category="Tasks",
                     priority=task_priority,
                     description=task_desc,
                     deadline=deadline,
